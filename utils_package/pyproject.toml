@@ -3,7 +3,7 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "eli_utils"
+name = "elijah_utils"
 version = "0.1.0"
 description = "Elijah's Utilities Module"
 readme = "README.md"
