@@ -5,12 +5,23 @@ Elijah's Python Utilities Module. Contains functions that may be useful.
 Can be used on microcontroller
 """
 # Import
+
 import sys
-if sys.platform != "nspire":
-  from datetime import datetime
+from datetime import datetime
+import json
 import math
 import cmath
+import os
+import subprocess
 
+# Functions
+
+def bash(command):
+  result = subprocess.run(command.split(), capture_output=True, text=True)
+  if result.returncode != 0:
+    print("Error %s:", result.stderr % result.returncode)
+  print(result.stdout)
+  return result.returncode
 
 def log(message, when=None):
   """Log a message with a timestamp.
@@ -68,3 +79,50 @@ Returns:
   root1 = (-b + sqrt_d) / (2 * a)
   root2 = (-b - sqrt_d) / (2 * a)
   return (root1, root2)
+
+def read_json(path, default=None):
+    """Read a JSON file and return its content, or default if missing/invalid."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return default
+
+def write_json(path, data, indent=2):
+    """Write a Python object to a JSON file."""
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=indent)
+        f.write("\n")
+
+def read_text(path, default=""):
+    """Read a text file."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return default
+
+def write_text(path, text):
+    """Write text to a file."""
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(text)
+
+def append_text(path, text):
+    """Append text to a file."""
+    with open(path, "a", encoding="utf-8") as f:
+        f.write(text)
+
+def file_exists(path):
+    """Return True if a file exists."""
+    return os.path.exists(path)
+
+def ensure_dir(path):
+    """Create a directory if it doesn't exist."""
+    os.makedirs(path, exist_ok=True)
+    return path
+
+def list_files(directory):
+    """Return a list of files in a directory."""
+    return [os.path.join(directory, f) for f in os.listdir(directory)
+            if os.path.isfile(os.path.join(directory, f))]
+
